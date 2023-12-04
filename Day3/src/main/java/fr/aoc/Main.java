@@ -4,19 +4,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 public class Main {
 
     private static void puzzle1(Path path) throws IOException {
         var lines = Files.readAllLines(path);
-
+        var pattern = Pattern.compile("\\d+");
         int i = 0;
-        for(var line: lines){
-            for(int j = 0; j < line.length(); j++){
-
+        for (var line : lines) {
+            var bob = pattern.matcher(line);
+            while (bob.find()) {
+                System.out.println("bob.group() = " + bob.group());
+                IntStream.range(bob.start(), bob.end()).forEach(System.out::println);
             }
-
-            i++;
         }
 
     }

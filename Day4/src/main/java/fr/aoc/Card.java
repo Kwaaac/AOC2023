@@ -26,24 +26,14 @@ public record Card(int id, List<Integer> winningNumbers, List<Integer> numbers) 
 
     public Stream<Card> computeWinningScratchcards() {
         var winningCards = (int) numbers.stream().filter(winningNumbers::contains).count();
-        if (winningCards == 0) {
-            return Stream.of(this);
-        }
+        Stream<Card> thisStream = Stream.of(this);
+        if (winningCards == 0)
+            return thisStream;
 
-        System.out.println("this = " + this);
-        System.out.println(IntStream.rangeClosed(id, winningCards + id - 1).mapToObj(cachedCards::get).toList());
-        return Stream.concat(Stream.of(this), IntStream.rangeClosed(id, Math.min(winningCards + id - 1, cachedCards.size() - 1))
+
+        return Stream.concat(thisStream, IntStream.rangeClosed(id, winningCards + id - 1)
                 .mapToObj(cachedCards::get)
-                .flatMap(card -> {
-                    var cardsCount = (int) card.numbers.stream().filter(card.winningNumbers::contains).count();
-                    if (cardsCount == 0) return Stream.of(card);
-
-                    System.out.println("currend: " + card + " added = " + IntStream.rangeClosed(card.id, Math.min(cardsCount + card.id - 1, cachedCards.size() - 1))
-                            .mapToObj(cachedCards::get).toList());
-
-                    return Stream.concat(Stream.of(card), IntStream.rangeClosed(card.id, Math.min(cardsCount + card.id - 1, cachedCards.size() - 1))
-                            .mapToObj(cachedCards::get));
-                }));
+                .flatMap(Card::computeWinningScratchcards));
 
     }
 

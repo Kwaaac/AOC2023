@@ -19,12 +19,10 @@ public class Main {
             List<Card> list = lines.map(Card::fromLine).toList();
             Card.setCachedCards(list);
             var cards = Card.stream()
-                            .peek(__ -> System.out.println("split"))
                     .flatMap(Card::computeWinningScratchcards)
-                    .peek(System.out::println)
-                    .collect(Collectors.groupingBy(Card::id));
+                    .count();
+            System.out.println("cards = " + cards);
 
-            cards.forEach((key, value) -> System.out.println(key + " : " + value.size()));
         }
     }
 
@@ -34,6 +32,6 @@ public class Main {
         var example2 = Paths.get("Day4", "src", "main", "resources", "2", "example.txt");
         var input = Paths.get("Day4", "src", "main", "resources", "input.txt");
 
-        puzzle2(example1);
+        puzzle2(input);
     }
 }
