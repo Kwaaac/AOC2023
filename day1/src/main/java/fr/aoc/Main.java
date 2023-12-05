@@ -1,13 +1,10 @@
-package fr.dgfip;
+package fr.aoc;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.rmi.MarshalledObject;
-import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.

@@ -1,8 +1,7 @@
-package fr.dgfip;
+package fr.aoc;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 public record Pipeline(String name, List<Mapper> mappers) {

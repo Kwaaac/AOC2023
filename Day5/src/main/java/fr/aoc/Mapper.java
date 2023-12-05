@@ -1,6 +1,4 @@
-package fr.dgfip;
-
-import java.util.HashMap;
+package fr.aoc;
 
 public record Mapper(long source, long destination, long range) {
 
