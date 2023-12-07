@@ -73,10 +73,12 @@ public class Main {
             }
         }
         pipelines.add(new Pipeline(name, mappers));
-
+        var start = System.currentTimeMillis();
         for (var pipe : pipelines) {
             seeds = pipe.map(seeds);
         }
+
+        System.out.println(System.currentTimeMillis() - start);
 
         System.out.println(seeds.parallel().min().orElseThrow());
     }
