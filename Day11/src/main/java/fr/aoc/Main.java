@@ -14,7 +14,6 @@ import java.util.stream.LongStream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        var example1 = Paths.get("Day11", "src", "main", "resources", "example.txt");
         var input = Paths.get("Day11", "src", "main", "resources", "input.txt");
 
         puzzle1(input);
@@ -22,7 +21,7 @@ public class Main {
     }
 
     private static List<String> transposeMatrix(List<String> matrix) {
-        var list = IntStream.range(0, matrix.getFirst().length())
+        return IntStream.range(0, matrix.getFirst().length())
                 .mapToObj(i -> matrix.stream().map(row -> row.charAt(i)).collect(Collector.of(
                         StringBuilder::new,
                         StringBuilder::append,
@@ -30,7 +29,6 @@ public class Main {
                         StringBuilder::toString
                 )))
                 .toList();
-        return list;
     }
 
     private static void puzzle1(Path path) throws IOException {
