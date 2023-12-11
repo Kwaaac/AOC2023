@@ -43,10 +43,9 @@ public class Main {
 
         var transposedLines = transposeMatrix(lines);
 
-        Function<List<String>, List<Integer>> getIdxEmpty = lst -> IntStream.range(0, lst.size()).flatMap(i -> {
-            if (lst.get(i).chars().allMatch(c -> c == '.')) return IntStream.of(i);
-            return IntStream.empty();
-        }).boxed().toList();
+        Function<List<String>, List<Integer>> getIdxEmpty = lst -> IntStream.range(0, lst.size())
+                .filter(i -> lst.get(i).chars().allMatch(c -> c == '.'))
+                .boxed().toList();
 
         var emptyRows = getIdxEmpty.apply(lines);
         var emptyColumn = getIdxEmpty.apply(transposedLines);
