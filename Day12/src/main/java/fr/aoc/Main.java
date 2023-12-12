@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collector;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -29,13 +30,23 @@ public class Main {
                 //[1,1,3]
                 var groups = Arrays.stream(tokens[1].split(",")).mapToInt(Integer::parseInt).toArray();
 
+                // [1,1,3] --> \.*#{1}\.+#{1}\.+#{3}\.*
+                var pattern = Arrays.stream(groups)
+                        .mapToObj(g -> STR."#{\{g}}")
+                        .collect(Collector.of(
+                                () -> new StringJoiner("\\.+", "\\.*", "\\.*"),
+                                StringJoiner::add,
+                                StringJoiner::merge,
+                                StringJoiner::toString
+                        ));
+                /* equivalent with a loop, but the stream is funnier to do - What do you mean readability ?
                 var sb = new StringJoiner("\\.+", "\\.*", "\\.*");
                 for (var g : groups) {
                     sb.add(STR."#{\{g}}");
                 }
-
-                // [1,1,3] --> \.*#{1}\.+#{1}\.+#{3}\.*
                 var pattern = sb.toString();
+
+                 */
 
                 var combinaisons = new ArrayList<String>(List.of(input));
                 var nbr = (int) input.chars().filter(i -> i == '?').count();
