@@ -16,21 +16,21 @@ public class Main {
     public static void main(String[] args) throws IOException {
         var example = Paths.get("Day12", "src", "main", "resources", "example.txt");
         var input = Paths.get("Day12", "src", "main", "resources", "input.txt");
-
+        var start = System.currentTimeMillis();
         puzzle1(input);
+        System.out.println(System.currentTimeMillis() - start);
     }
-
 
     private static void puzzle1(Path path) throws IOException {
         try (var lines = Files.lines(path)) {
-            var res = lines.mapToLong(line -> {
+            var res = lines.parallel().mapToLong(line -> {
                 var tokens = line.split("\\s");
-                //???.###. (add a . for easier checking)
+                //ex: ???.###. (add a . for easier checking)
                 var input = STR."\{tokens[0]}.";
-                //[1,1,3]
+                //ex: [1,1,3]
                 var groups = Arrays.stream(tokens[1].split(",")).mapToInt(Integer::parseInt).toArray();
 
-                // [1,1,3] --groups to regex--> #{1} #{1} #{3} --adding the . between--> \.*#{1}\.+#{1}\.+#{3}\.*
+                //ex: [1,1,3] --groups to regex--> #{1} #{1} #{3} --adding the . between--> \.*#{1}\.+#{1}\.+#{3}\.*
                 var pattern = Arrays.stream(groups)
                         .mapToObj(g -> STR."#{\{g}}")
                         .collect(Collector.of(
@@ -45,19 +45,19 @@ public class Main {
                     sb.add(STR."#{\{g}}");
                 }
                 var pattern = sb.toString();
-
                  */
 
                 var combinaisons = new ArrayList<String>(List.of(input));
                 var nbr = (int) input.chars().filter(i -> i == '?').count();
 
                 IntStream.range(0, nbr).forEach(_ -> {
-                    var tmp = combinaisons.stream().flatMap(c -> {
+                    var tmp = combinaisons.stream().parallel().flatMap(c -> {
                         var idx = c.indexOf('?');
                         if (idx == -1) return Stream.empty();
-                        var working = Stream.of(STR."\{c.substring(0, idx)}#\{c.substring(idx + 1)}");
-                        var broken = Stream.of(STR."\{c.substring(0, idx)}.\{c.substring(idx + 1)}");
-                        return Stream.concat(working, broken);
+                        return Stream.of(
+                                STR."\{c.substring(0, idx)}#\{c.substring(idx + 1)}",
+                                STR."\{c.substring(0, idx)}.\{c.substring(idx + 1)}"
+                        );
                     }).toList();
                     combinaisons.clear();
                     combinaisons.addAll(tmp);
