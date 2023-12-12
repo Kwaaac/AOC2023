@@ -30,10 +30,13 @@ public class Main {
                 //[1,1,3]
                 var groups = Arrays.stream(tokens[1].split(",")).mapToInt(Integer::parseInt).toArray();
 
+
                 var sb = new StringJoiner("\\.+", "\\.*", "\\.*");
                 for (var g : groups) {
                     sb.add(STR."#{\{g}}");
                 }
+                
+                // [1,1,3] --> \.*#{1}\.+#{1}\.+#{3}\.*
                 var pattern = sb.toString();
 
                 var combinaisons = new ArrayList<String>(List.of(input));
