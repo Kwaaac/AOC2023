@@ -21,21 +21,19 @@ public class Main {
 
 
     private static void puzzle1(Path path) throws IOException {
-
         try (var lines = Files.lines(path)) {
             var res = lines.mapToLong(line -> {
                 var tokens = line.split("\\s");
-                //???.###
+                //???.###. (add a . for easier checking)
                 var input = STR."\{tokens[0]}.";
                 //[1,1,3]
                 var groups = Arrays.stream(tokens[1].split(",")).mapToInt(Integer::parseInt).toArray();
-
 
                 var sb = new StringJoiner("\\.+", "\\.*", "\\.*");
                 for (var g : groups) {
                     sb.add(STR."#{\{g}}");
                 }
-                
+
                 // [1,1,3] --> \.*#{1}\.+#{1}\.+#{3}\.*
                 var pattern = sb.toString();
 
