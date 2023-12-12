@@ -30,7 +30,7 @@ public class Main {
                 //[1,1,3]
                 var groups = Arrays.stream(tokens[1].split(",")).mapToInt(Integer::parseInt).toArray();
 
-                // [1,1,3] --> \.*#{1}\.+#{1}\.+#{3}\.*
+                // [1,1,3] --groups to regex--> #{1} #{1} #{3} --adding the . between--> \.*#{1}\.+#{1}\.+#{3}\.*
                 var pattern = Arrays.stream(groups)
                         .mapToObj(g -> STR."#{\{g}}")
                         .collect(Collector.of(
