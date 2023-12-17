@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record Block(Coord coord, Coord direction, int blocks) {
-    public List<Block> next(int max) {
+    public List<Block> next(int min, int max) {
+        if (blocks < min) {
+            return List.of(new Block(coord.plus(direction), direction, blocks + 1));
+        }
         var lst = new ArrayList<Block>();
-
         // up       -1,  0
         // down      1,  0
         // left      0, -1
