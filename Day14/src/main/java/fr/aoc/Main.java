@@ -1,7 +1,6 @@
 package fr.aoc;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,24 +23,24 @@ public class Main {
     private static void puzzle1(Path path) throws IOException {
         var lines = Files.readAllLines(path);
 
-        List<Grid.Cell[]> list = new ArrayList<>();
-        var cells = new ArrayList<Grid.Cell>();
+        List<Cell[]> list = new ArrayList<>();
+        var cells = new ArrayList<Cell>();
         for (int i = 0; i < lines.size(); i++) {
             String s = lines.get(i);
             int value = i;
-            Grid.Cell[] array = s.chars()
+            Cell[] array = s.chars()
                     .mapToObj(j -> {
                         if (j == 'O') {
-                            Grid.Cell cell = new Grid.Cell(j, lines.size() - value);
+                            Cell cell = new Cell(j, lines.size() - value);
                             cells.add(cell);
                             return cell;
                         }
-                        return new Grid.Cell(j, 0);
+                        return new Cell(j, 0);
                     })
-                    .toArray(Grid.Cell[]::new);
+                    .toArray(Cell[]::new);
             list.add(array);
         }
-        var arr = list.toArray(new Grid.Cell[0][]);
+        var arr = list.toArray(new Cell[0][]);
 
         var grid = new Grid(arr, cells);
         var dirs = Dir.values();
@@ -49,51 +48,62 @@ public class Main {
         System.out.println(grid.sum());
     }
 
-
     private static void puzzle2(Path path) throws IOException {
         var lines = Files.readAllLines(path);
 
-        List<Grid.Cell[]> list = new ArrayList<>();
-        var cells = new ArrayList<Grid.Cell>();
+        List<Cell[]> list = new ArrayList<>();
+        var cells = new ArrayList<Cell>();
         for (int i = 0; i < lines.size(); i++) {
             String s = lines.get(i);
             int value = i;
-            Grid.Cell[] array = s.chars()
+            Cell[] array = s.chars()
                     .mapToObj(j -> {
                         if (j == 'O') {
-                            Grid.Cell cell = new Grid.Cell(j, lines.size() - value);
+                            Cell cell = new Cell(j, lines.size() - value);
                             cells.add(cell);
                             return cell;
                         }
-                        return new Grid.Cell(j, 0);
+                        return new Cell(j, 0);
                     })
-                    .toArray(Grid.Cell[]::new);
+                    .toArray(Cell[]::new);
             list.add(array);
         }
-        var arr = list.toArray(new Grid.Cell[0][]);
-
+        var arr = list.toArray(new Cell[0][]);
         var grid = new Grid(arr, cells);
         var dirs = Dir.values();
-        var map = new HashMap<Integer, List<Integer>>();
-        for (int i = 1; i <= 200; i++) {
+        var map = new HashMap<List<List<Cell>>, Integer>();
+        var index = new ArrayList<Integer>();
+
+        for (int i = 0; ; i++) {
             for (var dir : Dir.values()) {
                 grid.moveAll(dir);
             }
             var sum = grid.sum();
-//            if (1_000_000_000 % i == 0) {
-//                System.out.println(sum);
-//            }
-            map.computeIfAbsent(sum, k -> new ArrayList<>()).add(i);
+            var old = map.put(grid.getGrid(), grid.sum());
+            if (old != null) {
+                // cycle found !
+                map.clear();
+                index.clear();
+                for (int j = 0; ; j++) {
+                    for (var dir : Dir.values()) {
+                        grid.moveAll(dir);
+                    }
+                    sum = grid.sum();
+
+                    old = map.put(grid.getGrid(), sum);
+                    if (old == null) index.add(sum);
+                    else {
+                        var i1 = i - index.size();
+                        var index1 = (1_000_000_000 % i1) + i1 % index.size();
+
+                        System.out.println(index.get(index1));
+                        return;
+                    }
+                }
+            } else {
+                index.add(sum);
+            }
         }
-
-        System.out.println(map.size());
-        map.keySet().stream().map(s -> lcm(BigInteger.valueOf(s), BigInteger.valueOf(1_000_000_000))).forEach(System.out::println);
-    }
-
-    public static int lcm(BigInteger number1, BigInteger number2) {
-        BigInteger gcd = number1.gcd(number2);
-        BigInteger absProduct = number1.multiply(number2).abs();
-        return absProduct.divide(gcd).intValue();
     }
 }
 

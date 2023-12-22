@@ -2,7 +2,6 @@ package fr.aoc;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Grid {
@@ -35,6 +34,10 @@ public class Grid {
 
     public int sum() {
         return cells.stream().mapToInt(Cell::value).sum();
+    }
+
+    public int sum2() {
+        return Arrays.stream(grid).mapToInt(line -> Arrays.stream(line).mapToInt(Cell::value).sum()).sum();
     }
 
     private void move(Dir dir, int i, int j) {
@@ -87,53 +90,8 @@ public class Grid {
         }
     }
 
-    public Cell[][] getGrid() {
-        return Arrays.stream(grid).toArray(Cell[][]::new);
+    public List<List<Cell>> getGrid() {
+        return Arrays.stream(grid).map(l -> Arrays.stream(l).toList()).toList();
     }
 
-    public static class Cell {
-        int symbol;
-        int value;
-
-        public Cell(int symbol, int value) {
-            this.symbol = symbol;
-            this.value = value;
-        }
-
-        public int symbol() {
-            return symbol;
-        }
-
-        public int value() {
-            return value;
-        }
-
-        public void inc() {
-            if (symbol == 'O') {
-                this.value += 1;
-            }
-        }
-
-        public void dec() {
-            if (symbol == 'O') {
-                this.value -= 1;
-                if (this.value < 0) {
-                    throw new IllegalStateException("inferior");
-                }
-            }
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Cell cell = (Cell) o;
-            return symbol == cell.symbol;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(symbol);
-        }
-    }
 }
