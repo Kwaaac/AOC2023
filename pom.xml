@@ -14,7 +14,16 @@
         <module>Day4</module>
         <module>Day5</module>
         <module>Day7</module>
+        <module>Day8</module>
         <module>Day11</module>
+        <module>Day12</module>
+        <module>Day13</module>
+        <module>Day14</module>
+        <module>Day15</module>
+        <module>Day18</module>
+        <module>Day19</module>
+        <module>Day20</module>
+        <module>Day22</module>
     </modules>
 
     <properties>
